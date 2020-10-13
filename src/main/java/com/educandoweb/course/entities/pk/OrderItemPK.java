@@ -11,44 +11,38 @@ import com.educandoweb.course.entities.Product;
 
 @Embeddable
 public class OrderItemPK implements Serializable {
-
-
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManyToOne
-	@JoinColumn(name="order_id")
+	@JoinColumn(name = "order_id")
 	private Order order;
 	
-	
 	@ManyToOne
-	@JoinColumn(name="product_id")
-	private Product Product;
-
+	@JoinColumn(name = "product_id")
+	private Product product;
+	
 	public Order getOrder() {
 		return order;
 	}
-
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-
 	public Product getProduct() {
-		return Product;
+		return product;
 	}
-
 	public void setProduct(Product product) {
-		Product = product;
+		this.product = product;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Product == null) ? 0 : Product.hashCode());
 		result = prime * result + ((order == null) ? 0 : order.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -58,17 +52,16 @@ public class OrderItemPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		OrderItemPK other = (OrderItemPK) obj;
-		if (Product == null) {
-			if (other.Product != null)
-				return false;
-		} else if (!Product.equals(other.Product))
-			return false;
 		if (order == null) {
 			if (other.order != null)
 				return false;
 		} else if (!order.equals(other.order))
 			return false;
+		if (product == null) {
+			if (other.product != null)
+				return false;
+		} else if (!product.equals(other.product))
+			return false;
 		return true;
 	}
-	
 }
