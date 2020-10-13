@@ -19,12 +19,12 @@ import javax.persistence.Table;
 import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity // diz ao compilador que essa classe é uma entidade e será criada uma tabela no banco de dados
+@Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id // anotações necessárias para gerar Id automaticamentes
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -32,15 +32,13 @@ public class Order implements Serializable {
 	private Instant moment;
 	
 	private Integer orderStatus;
-	
 
-	@ManyToOne // relação muitos pra um
+	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private User client;
 
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
-	
 	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
@@ -48,11 +46,12 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment,OrderStatus orderStatus,User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
+		super();
 		this.id = id;
 		this.moment = moment;
-		this.client = client;
 		setOrderStatus(orderStatus);
+		this.client = client;
 	}
 
 	public Long getId() {
@@ -76,13 +75,9 @@ public class Order implements Serializable {
 	}
 
 	public void setOrderStatus(OrderStatus orderStatus) {
-		if(orderStatus != null) {
+		if (orderStatus != null) {
 			this.orderStatus = orderStatus.getCode();
 		}
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public User getClient() {
@@ -92,11 +87,7 @@ public class Order implements Serializable {
 	public void setClient(User client) {
 		this.client = client;
 	}
-	
-	public Set<OrderItem> getItems() {
-		return items;
-	}
-	
+
 	public Payment getPayment() {
 		return payment;
 	}
@@ -104,7 +95,19 @@ public class Order implements Serializable {
 	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
-
+	
+	public Set<OrderItem> getItems() {
+		return items;
+	}
+	
+	public Double getTotal() {
+		double sum = 0.0;
+		for (OrderItem x : items) {
+			sum += x.getSubTotal();
+		}
+		return sum;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -129,5 +132,4 @@ public class Order implements Serializable {
 			return false;
 		return true;
 	}
-	
 }
